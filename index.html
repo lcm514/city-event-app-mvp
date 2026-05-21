@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="City Event Management App — discover, save, and book city events across Saudi Arabia." />
+  <title>City Events — Saudi Vision 2030</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    referrerpolicy="no-referrer"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#view-events">Skip to main content</a>
+
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <button class="brand" data-action="show-events" aria-label="Go to home">
+        <span class="brand__mark"><i class="fa-regular fa-calendar-days" aria-hidden="true"></i></span>
+        <span class="brand__text">
+          <strong>City Events</strong>
+          <span class="brand__sub">Vision 2030 · Quality of Life</span>
+        </span>
+      </button>
+
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" data-action="toggle-menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+
+      <nav class="nav" id="nav" aria-label="Primary">
+        <button class="nav__btn" data-action="show-events" aria-label="Home">
+          <i class="fa-solid fa-house" aria-hidden="true"></i>
+          <span class="nav__label">Home</span>
+        </button>
+        <button class="nav__btn" data-action="show-favorites" aria-label="Favorites">
+          <i class="fa-solid fa-heart" aria-hidden="true"></i>
+          <span class="nav__label">Favorites</span>
+          <span class="badge" id="favorites-badge" hidden>0</span>
+        </button>
+        <button class="nav__btn" data-action="show-bookings" aria-label="My bookings">
+          <i class="fa-solid fa-ticket" aria-hidden="true"></i>
+          <span class="nav__label">My Bookings</span>
+        </button>
+        <button class="nav__btn nav__btn--admin-dash" data-action="show-admin" aria-label="Admin dashboard" hidden id="nav-admin-link">
+          <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+          <span class="nav__label">Dashboard</span>
+        </button>
+
+        <span class="admin-chip" id="admin-chip" hidden>
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Admin
+        </span>
+
+        <button class="nav__btn nav__btn--cta" id="admin-toggle-btn" data-action="toggle-admin">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          <span class="nav__label" id="admin-toggle-label">Admin Mode</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main" id="main">
+
+    <!-- ============== EVENTS LIST (HOME) ============== -->
+    <section class="view" id="view-events" aria-labelledby="hero-title">
+      <div class="hero">
+        <div class="hero__bg" aria-hidden="true"></div>
+        <div class="hero__inner">
+          <span class="hero__kicker">Saudi Vision 2030 · Quality of Life Program</span>
+          <h1 id="hero-title" class="hero__title">
+            Discover what's happening<br />in your city.
+          </h1>
+          <p class="hero__lede">
+            Cultural festivals, sports tournaments, family nights, and educational summits — all in one place.
+          </p>
+
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search events by title…"
+              aria-label="Search events by title"
+              autocomplete="off"
+            />
+            <button class="search__clear" id="search-clear" hidden aria-label="Clear search">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="chips" id="filter-chips" role="tablist" aria-label="Filter by category">
+            <button class="chip chip--active" data-category="all" role="tab" aria-selected="true">All</button>
+            <button class="chip" data-category="Cultural" role="tab">Cultural</button>
+            <button class="chip" data-category="Sports" role="tab">Sports</button>
+            <button class="chip" data-category="Entertainment" role="tab">Entertainment</button>
+            <button class="chip" data-category="Educational" role="tab">Educational</button>
+            <button class="chip" data-category="Family" role="tab">Family</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section__head">
+          <h2 class="section__title" id="results-title">All events</h2>
+          <span class="section__meta" id="results-count" aria-live="polite">0 events</span>
+        </div>
+        <div class="grid" id="events-grid"></div>
+        <div class="empty" id="events-empty" hidden>
+          <i class="fa-regular fa-calendar-xmark" aria-hidden="true"></i>
+          <h3>No events match your search</h3>
+          <p>Try a different keyword or clear the filters.</p>
+          <button class="btn btn--ghost" data-action="reset-filters">Reset filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== EVENT DETAILS ============== -->
+    <section class="view" id="view-event-details" hidden aria-labelledby="details-title-h"></section>
+
+    <!-- ============== FAVORITES ============== -->
+    <section class="view" id="view-favorites" hidden aria-labelledby="favorites-title">
+      <div class="page-head">
+        <button class="back" data-action="show-events" aria-label="Back to events">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back
+        </button>
+        <h2 id="favorites-title"><i class="fa-solid fa-heart" aria-hidden="true"></i> Your favorites</h2>
+        <p>Events you've saved for later.</p>
+      </div>
+      <div class="grid" id="favorites-grid"></div>
+      <div class="empty" id="favorites-empty" hidden>
+        <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        <h3>No favorites yet</h3>
+        <p>Tap the heart on any event to save it here.</p>
+        <button class="btn btn--primary" data-action="show-events">Browse events</button>
+      </div>
+    </section>
+
+    <!-- ============== MY BOOKINGS ============== -->
+    <section class="view" id="view-bookings" hidden aria-labelledby="bookings-title">
+      <div class="page-head">
+        <button class="back" data-action="show-events" aria-label="Back to events">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back
+        </button>
+        <h2 id="bookings-title"><i class="fa-solid fa-ticket" aria-hidden="true"></i> My bookings</h2>
+        <p>Your confirmed registrations.</p>
+      </div>
+      <div class="bookings" id="bookings-list"></div>
+      <div class="empty" id="bookings-empty" hidden>
+        <i class="fa-regular fa-clipboard" aria-hidden="true"></i>
+        <h3>No bookings yet</h3>
+        <p>Register for an event to see it here.</p>
+        <button class="btn btn--primary" data-action="show-events">Browse events</button>
+      </div>
+    </section>
+
+    <!-- ============== ADMIN DASHBOARD ============== -->
+    <section class="view" id="view-admin" hidden aria-labelledby="admin-title">
+      <div class="page-head page-head--admin">
+        <div>
+          <span class="page-head__kicker"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Organizer view</span>
+          <h2 id="admin-title">Admin dashboard</h2>
+          <p>Manage events, monitor activity, and track engagement.</p>
+        </div>
+        <button class="btn btn--primary" data-action="open-event-form" data-mode="create">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> Add new event
+        </button>
+      </div>
+
+      <div class="stats" id="stats-grid"></div>
+
+      <div class="admin-card">
+        <div class="admin-card__head">
+          <h3>All events</h3>
+          <span class="section__meta" id="admin-count">0 events</span>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" aria-label="Manage events">
+            <thead>
+              <tr>
+                <th scope="col" class="col-thumb" aria-label="Cover"></th>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Seats</th>
+                <th scope="col" class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <strong>City Events</strong>
+        <span>An MVP demonstrator inspired by Saudi Vision 2030's Quality of Life Program.</span>
+      </div>
+      <span class="footer__meta">© <span id="footer-year"></span></span>
+    </div>
+  </footer>
+
+  <!-- ============== REGISTER MODAL ============== -->
+  <div class="modal" id="modal-register" hidden role="dialog" aria-modal="true" aria-labelledby="register-title">
+    <div class="modal__backdrop" data-modal-close="modal-register" tabindex="-1"></div>
+    <div class="modal__panel" role="document">
+      <header class="modal__header">
+        <div>
+          <span class="modal__kicker">Step 1 of 1</span>
+          <h3 id="register-title">Register for event</h3>
+        </div>
+        <button class="modal__close" aria-label="Close" data-modal-close="modal-register">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <form id="register-form" class="form" novalidate>
+        <input type="hidden" id="register-event-id" />
+        <div class="form__summary" id="register-summary"></div>
+
+        <div class="form__field">
+          <label for="register-name">Full name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="register-name" autocomplete="name" required />
+          <span class="form__error" data-error-for="register-name"></span>
+        </div>
+
+        <div class="form__field">
+          <label for="register-email">Email <span class="req" aria-hidden="true">*</span></label>
+          <input type="email" id="register-email" autocomplete="email" required />
+          <span class="form__error" data-error-for="register-email"></span>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+            <label for="register-phone">Phone (optional)</label>
+            <input type="tel" id="register-phone" autocomplete="tel" placeholder="+966…" />
+            <span class="form__error" data-error-for="register-phone"></span>
+          </div>
+          <div class="form__field">
+            <label for="register-tickets">Tickets <span class="req" aria-hidden="true">*</span></label>
+            <select id="register-tickets" required>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <span class="form__error" data-error-for="register-tickets"></span>
+          </div>
+        </div>
+
+        <footer class="modal__footer">
+          <button type="button" class="btn btn--ghost" data-modal-close="modal-register">Cancel</button>
+          <button type="submit" class="btn btn--primary">
+            <i class="fa-solid fa-check" aria-hidden="true"></i> Confirm registration
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============== ADMIN LOGIN MODAL ============== -->
+  <div class="modal" id="modal-admin-login" hidden role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+    <div class="modal__backdrop" data-modal-close="modal-admin-login" tabindex="-1"></div>
+    <div class="modal__panel modal__panel--sm" role="document">
+      <header class="modal__header">
+        <div>
+          <span class="modal__kicker">Restricted area</span>
+          <h3 id="admin-login-title"><i class="fa-solid fa-lock" aria-hidden="true"></i> Admin login</h3>
+        </div>
+        <button class="modal__close" aria-label="Close" data-modal-close="modal-admin-login">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <form id="admin-login-form" class="form" novalidate>
+        <p class="form__help">Enter the organizer password to switch into admin mode.</p>
+        <div class="form__field">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" autocomplete="off" required />
+          <span class="form__error" data-error-for="admin-password"></span>
+        </div>
+        <footer class="modal__footer">
+          <button type="button" class="btn btn--ghost" data-modal-close="modal-admin-login">Cancel</button>
+          <button type="submit" class="btn btn--primary">
+            <i class="fa-solid fa-unlock" aria-hidden="true"></i> Unlock
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============== EVENT FORM MODAL (ADD/EDIT) ============== -->
+  <div class="modal" id="modal-event-form" hidden role="dialog" aria-modal="true" aria-labelledby="event-form-title">
+    <div class="modal__backdrop" data-event-form-backdrop tabindex="-1"></div>
+    <div class="modal__panel modal__panel--lg" role="document">
+      <header class="modal__header">
+        <div>
+          <span class="modal__kicker" id="event-form-kicker">New event</span>
+          <h3 id="event-form-title">Publish to your city</h3>
+        </div>
+        <button class="modal__close" aria-label="Close" id="event-form-close">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <form id="event-form" class="form" novalidate>
+        <input type="hidden" id="event-id" />
+
+        <div class="form__field">
+          <label for="event-title">Title <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="event-title" required maxlength="80" />
+          <span class="form__error" data-error-for="event-title"></span>
+        </div>
+
+        <div class="form__field">
+          <label for="event-description">Description <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="event-description" rows="3" required maxlength="400"></textarea>
+          <span class="form__error" data-error-for="event-description"></span>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+            <label for="event-date">Date <span class="req" aria-hidden="true">*</span></label>
+            <input type="date" id="event-date" required />
+            <span class="form__error" data-error-for="event-date"></span>
+          </div>
+          <div class="form__field">
+            <label for="event-time">Time <span class="req" aria-hidden="true">*</span></label>
+            <input type="time" id="event-time" required />
+            <span class="form__error" data-error-for="event-time"></span>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+            <label for="event-venue">Venue <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="event-venue" required maxlength="80" />
+            <span class="form__error" data-error-for="event-venue"></span>
+          </div>
+          <div class="form__field">
+            <label for="event-organizer">Organizer <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="event-organizer" required maxlength="60" />
+            <span class="form__error" data-error-for="event-organizer"></span>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+            <label for="event-category">Category <span class="req" aria-hidden="true">*</span></label>
+            <select id="event-category" required>
+              <option value="">Select category</option>
+              <option value="Cultural">Cultural</option>
+              <option value="Sports">Sports</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Educational">Educational</option>
+              <option value="Family">Family</option>
+            </select>
+            <span class="form__error" data-error-for="event-category"></span>
+          </div>
+          <div class="form__field">
+            <label for="event-seats">Total seats <span class="req" aria-hidden="true">*</span></label>
+            <input type="number" id="event-seats" min="1" required />
+            <span class="form__error" data-error-for="event-seats"></span>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+            <label for="event-price">Price (SAR) <span class="req" aria-hidden="true">*</span></label>
+            <input type="number" id="event-price" min="0" step="1" required />
+            <span class="form__error" data-error-for="event-price"></span>
+          </div>
+          <div class="form__field">
+            <label for="event-image">Cover image URL (optional)</label>
+            <input type="url" id="event-image" placeholder="https://…" />
+            <span class="form__error" data-error-for="event-image"></span>
+          </div>
+        </div>
+
+        <footer class="modal__footer">
+          <button type="button" class="btn btn--ghost" id="event-form-cancel">Cancel</button>
+          <button type="submit" class="btn btn--primary" id="event-form-save">
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save event
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============== DELETE CONFIRM MODAL ============== -->
+  <div class="modal" id="modal-delete" hidden role="dialog" aria-modal="true" aria-labelledby="delete-title">
+    <div class="modal__backdrop" data-modal-close="modal-delete" tabindex="-1"></div>
+    <div class="modal__panel modal__panel--sm" role="document">
+      <header class="modal__header">
+        <div>
+          <span class="modal__kicker modal__kicker--danger">Destructive action</span>
+          <h3 id="delete-title"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Delete event</h3>
+        </div>
+        <button class="modal__close" aria-label="Close" data-modal-close="modal-delete">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <div class="modal__body">
+        <p id="delete-message">Are you sure you want to delete this event?</p>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-modal-close="modal-delete">Cancel</button>
+        <button type="button" class="btn btn--danger" id="delete-confirm">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i> Yes, delete
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ============== TOAST STACK ============== -->
+  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
