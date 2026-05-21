@@ -1,6 +1,6 @@
 # City Event Management App — MVP
 
-> A web-based prototype for the **[COURSE_NAME]** course, demonstrating the core features of the City Event Management App proposed in our project plan. Inspired by **Saudi Vision 2030's Quality of Life Program**.
+> A web-based prototype for the **[Software Project Management]** course, demonstrating the core features of the City Event Management App proposed in our project plan. Inspired by **Saudi Vision 2030's Quality of Life Program**.
 
 ---
 
