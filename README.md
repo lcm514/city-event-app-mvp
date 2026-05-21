@@ -74,11 +74,7 @@ This project aligns directly with Vision 2030's **Quality of Life Program**, whi
 
 To wipe the demo data and start fresh, open DevTools → Application → Local Storage and clear the entries beginning with `cea_`, then refresh.
 
----
 
-## Demo Video
-
-[DEMO_VIDEO_LINK]
 
 ---
 
