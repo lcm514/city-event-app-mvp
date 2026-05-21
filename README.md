@@ -147,12 +147,8 @@ These would be addressed in subsequent iterations as outlined in the team's proj
 
 ## Team
 
-[TEAM_MEMBERS]
+[سفر ال متعب ، بدر الشدي ، حسام الدوسري]
 
 ---
 
-## Course
 
-[COURSE_NAME] — [UNIVERSITY_NAME]
-
-Supervised by **[SUPERVISOR_NAME]**
